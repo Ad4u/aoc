@@ -50,7 +50,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]std.ArrayList(u8) 
 
 test "y16d02" {
     const alloc = std.testing.allocator;
-    const expectEqualString = std.testing.expectEqualStrings;
+    const expectEqualStrings = std.testing.expectEqualStrings;
     const input =
         \\ULL
         \\RRDDD
@@ -62,6 +62,6 @@ test "y16d02" {
     defer res_1.deinit();
     defer res_2.deinit();
 
-    try expectEqualString("1985", res_1.items);
-    try expectEqualString("5DB3", res_2.items);
+    try expectEqualStrings("1985", res_1.items);
+    try expectEqualStrings("5DB3", res_2.items);
 }
