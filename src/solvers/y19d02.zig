@@ -30,9 +30,12 @@ fn runIntCode(intcode: *std.ArrayList(usize), noun: usize, verb: usize) !usize {
     return intcode.items[0];
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]usize {
+pub fn solve(a: std.mem.Allocator, input: []const u8) ![2]usize {
+    var arena = std.heap.ArenaAllocator.init(a);
+    defer arena.deinit();
+    const alloc = arena.allocator();
+
     var intcode = std.ArrayList(usize).init(alloc);
-    defer intcode.deinit();
 
     var iter = std.mem.tokenizeScalar(u8, input, ',');
     while (iter.next()) |str| {
@@ -40,7 +43,6 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]usize {
     }
 
     var intcode_part_1 = try intcode.clone();
-    defer intcode_part_1.deinit();
     const part_1 = try runIntCode(&intcode_part_1, 12, 2);
 
     var part_2: usize = 0;
@@ -48,7 +50,6 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]usize {
     for (0..100) |noun| {
         for (0..100) |verb| {
             var temp_intcode = try intcode.clone();
-            defer temp_intcode.deinit();
             if (output_match == try runIntCode(&temp_intcode, noun, verb)) {
                 part_2 = 100 * noun + verb;
             }
