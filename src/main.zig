@@ -8,12 +8,12 @@ pub fn main() !void {
     // defer std.debug.assert(gpa.deinit() == .ok);
 
     // -- FB Allocator
-    // var buf: [1024 * 1024 * 8]u8 = undefined;
-    // var fba = std.heap.FixedBufferAllocator.init(&buf);
-    // var alloc = fba.allocator();
+    var buf: [1024 * 1024 * 8]u8 = undefined;
+    var fba = std.heap.FixedBufferAllocator.init(&buf);
+    var alloc = fba.allocator();
 
     // -- Page Allocator
-    const alloc = std.heap.page_allocator;
+    // const alloc = std.heap.page_allocator;
 
     const outw = std.io.getStdOut().writer();
 
