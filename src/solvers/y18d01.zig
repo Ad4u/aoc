@@ -4,29 +4,27 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]i64 {
     var twice_frequency: i64 = 0;
     var final_frequency: i64 = 0;
 
-    var frequency_list = std.ArrayList(i64).init(alloc);
-    defer frequency_list.deinit();
+    const visited_len = 1024 * 1024;
+    const visited = try alloc.alloc(bool, visited_len * 2);
+    defer alloc.free(visited);
+    @memset(visited, false);
+    visited[visited_len] = true;
 
-    var visited_frequencies = std.AutoHashMap(i64, void).init(alloc);
-    defer visited_frequencies.deinit();
-    try visited_frequencies.put(twice_frequency, {});
+    var first_loop = true;
+    loop: while (true) {
+        var lines = std.mem.tokenizeScalar(u8, input, '\n');
+        while (lines.next()) |line| {
+            const value = try std.fmt.parseInt(i64, line, 10);
+            if (first_loop) final_frequency += value;
 
-    var lines = std.mem.tokenizeScalar(u8, input, '\n');
-    while (lines.next()) |line| {
-        try frequency_list.append(try std.fmt.parseInt(i64, line, 10));
-    }
+            twice_frequency += value;
 
-    var i: usize = 0;
-    while (true) : (i += 1) {
-        const frequency_change = frequency_list.items[i % frequency_list.items.len];
+            const idx = @as(usize, @intCast(visited_len + twice_frequency));
+            if (visited[idx]) break :loop;
 
-        if (i < frequency_list.items.len) {
-            final_frequency += frequency_change;
+            visited[idx] = true;
         }
-
-        twice_frequency += frequency_change;
-        const entry = try visited_frequencies.getOrPut(twice_frequency);
-        if (entry.found_existing) break;
+        first_loop = false;
     }
 
     return .{ final_frequency, twice_frequency };
