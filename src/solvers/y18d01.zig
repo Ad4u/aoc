@@ -1,13 +1,11 @@
 const std = @import("std");
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]i64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
     var twice_frequency: i64 = 0;
     var final_frequency: i64 = 0;
 
     const visited_len = 1024 * 1024;
-    const visited = try alloc.alloc(bool, visited_len * 2);
-    defer alloc.free(visited);
-    @memset(visited, false);
+    var visited: [visited_len * 2]bool = [_]bool{false} ** (visited_len * 2);
     visited[visited_len] = true;
 
     var first_loop = true;
