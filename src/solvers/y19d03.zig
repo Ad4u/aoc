@@ -23,6 +23,8 @@ fn parseInstruction(instruction: []const u8) !struct { direction: @Vector(2, i64
 pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var position: @Vector(2, i64) = .{ 0, 0 };
 
+    // The first wire is saved into an hashmap (position, number of steps)
+    // While iterating instructions of wire 2, we directly intersect for common positions
     var wire_1 = std.AutoHashMap(@Vector(2, i64), u64).init(alloc);
     var intersections = std.AutoHashMap(@Vector(2, i64), u64).init(alloc);
     defer wire_1.deinit();
@@ -30,6 +32,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
 
     var lines = std.mem.tokenizeScalar(u8, input, '\n');
 
+    // Wire 1
     var inst_wire_1 = std.mem.tokenizeScalar(u8, lines.next().?, ',');
     var step_1: u64 = 0;
     while (inst_wire_1.next()) |inst| {
@@ -41,8 +44,10 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
         }
     }
 
+    // Reset position fo wire 2
     position = .{ 0, 0 };
 
+    // Wire 2
     var inst_wire_2 = std.mem.tokenizeScalar(u8, lines.next().?, ',');
     var step_2: u64 = 0;
     while (inst_wire_2.next()) |inst| {
@@ -58,6 +63,8 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
         }
     }
 
+    // We have an Hashmap of interesections and steps
+    // So we iterate over it to find the solutions
     var closest: u64 = std.math.maxInt(u64);
     var min_step: u64 = std.math.maxInt(u64);
     var intersect_iter = intersections.iterator();
