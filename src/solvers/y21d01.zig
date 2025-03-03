@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn countDirectIncreases(arr: std.ArrayList(u64)) u64 {
     var increases: u64 = 0;
@@ -9,7 +10,7 @@ fn countDirectIncreases(arr: std.ArrayList(u64)) u64 {
     return increases;
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var depths = std.ArrayList(u64).init(alloc);
     defer depths.deinit();
 
@@ -26,7 +27,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
         try depths_avg.append(w[0] + w[1] + w[2]);
     }
 
-    return .{ countDirectIncreases(depths), countDirectIncreases(depths_avg) };
+    return Result.from(u64, .{ countDirectIncreases(depths), countDirectIncreases(depths_avg) });
 }
 
 test "y20d01" {
@@ -46,5 +47,5 @@ test "y20d01" {
         \\263
     ;
 
-    try expectEqual(.{ 7, 5 }, (try solve(alloc, input)));
+    try expectEqual(.{ 7, 5 }, (try solve(alloc, input)).ints);
 }

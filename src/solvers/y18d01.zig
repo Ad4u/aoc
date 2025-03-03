@@ -1,6 +1,7 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var twice_frequency: i64 = 0;
     var final_frequency: i64 = 0;
 
@@ -25,15 +26,15 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
         first_loop = false;
     }
 
-    return .{ final_frequency, twice_frequency };
+    return Result.from(i64, .{ final_frequency, twice_frequency });
 }
 
 test "y18d01" {
     const alloc = std.testing.allocator;
     const expectEqual = std.testing.expectEqual;
 
-    try expectEqual(.{ 0, 0 }, (try solve(alloc, "+1\n-1")));
-    try expectEqual(.{ 4, 10 }, (try solve(alloc, "+3\n+3\n+4\n-2\n-4")));
-    try expectEqual(.{ 4, 5 }, (try solve(alloc, "-6\n+3\n+8\n+5\n-6")));
-    try expectEqual(.{ 1, 14 }, (try solve(alloc, "+7\n+7\n-2\n-7\n-4")));
+    try expectEqual(.{ 0, 0 }, (try solve(alloc, "+1\n-1")).ints);
+    try expectEqual(.{ 4, 10 }, (try solve(alloc, "+3\n+3\n+4\n-2\n-4")).ints);
+    try expectEqual(.{ 4, 5 }, (try solve(alloc, "-6\n+3\n+8\n+5\n-6")).ints);
+    try expectEqual(.{ 1, 14 }, (try solve(alloc, "+7\n+7\n-2\n-7\n-4")).ints);
 }

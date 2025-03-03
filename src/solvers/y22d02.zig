@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn calcScore_1(line: []const u8) u64 {
     var score = line[2] - 'X' + 1;
@@ -17,7 +18,7 @@ fn calcScore_2(line: []const u8) u64 {
     return delta + ((line[2] - 'X') * 3);
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var lines = std.mem.tokenizeScalar(u8, input, '\n');
 
     var score_1: u64 = 0;
@@ -27,7 +28,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         score_2 += calcScore_2(line);
     }
 
-    return .{ score_1, score_2 };
+    return Result.from(u64, .{ score_1, score_2 });
 }
 
 test "y22d02" {
@@ -40,5 +41,5 @@ test "y22d02" {
         \\C Z
     ;
 
-    try expectEqual(.{ 15, 12 }, (try solve(alloc, input)));
+    try expectEqual(.{ 15, 12 }, (try solve(alloc, input)).ints);
 }

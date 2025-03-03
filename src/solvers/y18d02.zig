@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn analyseLine(alloc: std.mem.Allocator, line: []const u8) ![2]bool {
     var has_two = false;
@@ -47,7 +48,7 @@ fn calcCommon(alloc: std.mem.Allocator, input: []const u8) !std.ArrayList(u8) {
     return error.LogicError;
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]std.ArrayList(u8) {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var list_1 = std.ArrayList(u8).init(alloc);
 
     var two: u64 = 0;
@@ -61,7 +62,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]std.ArrayList(u8) 
     }
     try list_1.writer().print("{}", .{two * three});
 
-    return .{ list_1, try calcCommon(alloc, input) };
+    return Result.from(std.ArrayList(u8), .{ list_1, try calcCommon(alloc, input) });
 }
 
 test "y18d02" {
@@ -91,10 +92,10 @@ test "y18d02" {
     const res_1 = (try solve(alloc, input_1));
     const res_2 = (try solve(alloc, input_2));
 
-    try expectEqualStrings("12", res_1[0].items);
-    try expectEqualStrings("fgij", res_2[1].items);
+    try expectEqualStrings("12", res_1.strs[0].items);
+    try expectEqualStrings("fgij", res_2.strs[1].items);
 
-    for (res_1, res_2) |r1, r2| {
+    for (res_1.strs, res_2.strs) |r1, r2| {
         r1.deinit();
         r2.deinit();
     }

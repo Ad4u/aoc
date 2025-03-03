@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const KEYPAD_NORM: [3][3]u8 = .{ .{ '1', '2', '3' }, .{ '4', '5', '6' }, .{ '7', '8', '9' } };
 const KEYPAD_DIAM: [5][5]u8 = .{ .{ '0', '0', '1', '0', '0' }, .{ '0', '2', '3', '4', '0' }, .{ '5', '6', '7', '8', '9' }, .{ '0', 'A', 'B', 'C', '0' }, .{ '0', '0', 'D', '0', '0' } };
@@ -23,7 +24,7 @@ fn move(position: [2]usize, max: usize, ins: u8) ![2]usize {
     return new_position;
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]std.ArrayList(u8) {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var code_1 = std.ArrayList(u8).init(alloc);
     var position_1: [2]usize = .{ 1, 1 }; // Row, Col
     var code_2 = std.ArrayList(u8).init(alloc);
@@ -45,7 +46,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]std.ArrayList(u8) 
         try code_2.append(KEYPAD_DIAM[position_2[0]][position_2[1]]);
     }
 
-    return .{ code_1, code_2 };
+    return Result.from(std.ArrayList(u8), .{ code_1, code_2 });
 }
 
 test "y16d02" {
@@ -58,7 +59,7 @@ test "y16d02" {
         \\UUUUD
     ;
 
-    const res_1, const res_2 = try solve(alloc, input);
+    const res_1, const res_2 = (try solve(alloc, input)).strs;
     defer res_1.deinit();
     defer res_2.deinit();
 

@@ -1,6 +1,7 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var position_1: [2]i64 = .{ 0, 0 }; //Depth, Horizontal
     var position_2: [3]i64 = .{ 0, 0, 0 }; //Depth, Horizontal, Aim
 
@@ -27,7 +28,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
         }
     }
 
-    return .{ position_1[0] * position_1[1], position_2[0] * position_2[1] };
+    return Result.from(i64, .{ position_1[0] * position_1[1], position_2[0] * position_2[1] });
 }
 
 test "y21d02" {
@@ -43,5 +44,5 @@ test "y21d02" {
         \\forward 2
     ;
 
-    try expectEqual(.{ 150, 900 }, (try solve(alloc, input)));
+    try expectEqual(.{ 150, 900 }, (try solve(alloc, input)).ints);
 }

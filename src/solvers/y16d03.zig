@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn arePossible(dims: [3][3]u64) [2]u64 {
     var hori: u64 = 0;
@@ -25,7 +26,7 @@ fn arePossible(dims: [3][3]u64) [2]u64 {
     return .{ hori, vert };
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var possible_hori: u64 = 0;
     var possible_vert: u64 = 0;
 
@@ -49,7 +50,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         }
     }
 
-    return .{ possible_hori, possible_vert };
+    return Result.from(u64, .{ possible_hori, possible_vert });
 }
 
 test "y16d03" {
@@ -64,5 +65,5 @@ test "y16d03" {
         \\203 403 603
     ;
 
-    try expectEqual(.{ 3, 6 }, try solve(alloc, input));
+    try expectEqual(.{ 3, 6 }, (try solve(alloc, input)).ints);
 }

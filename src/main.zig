@@ -1,5 +1,9 @@
 const std = @import("std");
-const solvers = @import("solvers");
+pub const solvers = @import("solvers.zig");
+
+const GREEN_CODE = "\x1b[32m";
+const RED_CODE = "\x1b[31m";
+const RESET_CODE = "\x1b[0m";
 
 pub fn main() !void {
     // -- GP Allocator
@@ -7,13 +11,8 @@ pub fn main() !void {
     // const alloc = gpa.allocator();
     // defer std.debug.assert(gpa.deinit() == .ok);
 
-    // -- FB Allocator
-    var buf: [1024 * 1024 * 8]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&buf);
-    var alloc = fba.allocator();
-
     // -- Page Allocator
-    // const alloc = std.heap.page_allocator;
+    const alloc = std.heap.page_allocator;
 
     const outw = std.io.getStdOut().writer();
 
@@ -25,40 +24,41 @@ pub fn main() !void {
         requested_solver = args[1];
     }
 
-    // We need "continue" inside inline for loop to get rid of: break :loop;
-    // https://github.com/ziglang/zig/issues/9524
-    inline for (@typeInfo(solvers).Struct.decls) |d| {
-        loop: {
-            if (requested_solver != null and !std.mem.eql(u8, requested_solver.?, d.name)) {
-                break :loop;
-            }
+    for (solvers.List) |solver| {
+        if (requested_solver != null and !std.mem.eql(u8, requested_solver.?, solver.name)) {
+            continue;
+        }
 
-            const file_name = try std.fmt.allocPrint(alloc, "inputs/{s}.txt", .{d.name});
-            defer alloc.free(file_name);
+        const file_name = try std.fmt.allocPrint(alloc, "inputs/{s}.txt", .{solver.name});
 
-            const file = std.fs.cwd().openFile(file_name, .{}) catch {
-                try outw.print("{s} : Unable to open input file\n", .{d.name});
-                break :loop;
-            };
+        const file = std.fs.cwd().openFile(file_name, .{}) catch {
+            try outw.print(RED_CODE ++ "{s} : Unable to open input file\n" ++ RESET_CODE, .{solver.name});
+            continue;
+        };
+        alloc.free(file_name);
 
-            const input_raw = try file.readToEndAlloc(alloc, try std.math.powi(usize, 2, 16));
-            const input = std.mem.trim(u8, input_raw, "\n");
-            defer alloc.free(input_raw);
+        const input_raw = try file.readToEndAlloc(alloc, try std.math.powi(usize, 2, 16));
+        file.close();
+        const input = std.mem.trim(u8, input_raw, "\n");
 
-            const results = @field(solvers, d.name).solve(alloc, input) catch |err| {
-                try outw.print("{s} : Solver returned an error - {s}\n", .{ d.name, @errorName(err) });
-                break :loop;
-            };
+        const results = solver.func(alloc, input) catch |err| {
+            try outw.print(RED_CODE ++ "{s} : Solver returned an error - {s}\n" ++ RESET_CODE, .{ solver.name, @errorName(err) });
+            continue;
+        };
+        alloc.free(input_raw);
 
-            switch (@TypeOf(results)) {
-                [2]std.ArrayList(u8) => {
-                    try outw.print("{s} : {s} - {s}\n", .{ d.name, results[0].items, results[1].items });
-                    for (results) |list| {
-                        list.deinit();
-                    }
-                },
-                else => try outw.print("{s} : {} - {}\n", .{ d.name, results[0], results[1] }),
-            }
+        switch (results) {
+            .ints => |vals| try outw.print(GREEN_CODE ++ "{s} : {} - {}\n" ++ RESET_CODE, .{ solver.name, vals[0], vals[1] }),
+            .strs => |vals| {
+                try outw.print(GREEN_CODE ++ "{s} : {s} - {s}\n" ++ RESET_CODE, .{ solver.name, vals[0].items, vals[1].items });
+                for (vals) |list| {
+                    list.deinit();
+                }
+            },
         }
     }
+}
+
+test {
+    std.testing.refAllDeclsRecursive(@This());
 }

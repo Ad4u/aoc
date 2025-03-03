@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const Password = struct {
     min: u64,
@@ -37,7 +38,7 @@ const Password = struct {
     }
 };
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var lines = std.mem.tokenizeScalar(u8, input, '\n');
 
     var num_valid_1: u64 = 0;
@@ -48,14 +49,14 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         if (password.is_valid_2()) num_valid_2 += 1;
     }
 
-    return .{ num_valid_1, num_valid_2 };
+    return Result.from(u64, .{ num_valid_1, num_valid_2 });
 }
 
 test "y20d02" {
     const alloc = std.testing.allocator;
     const expectEqual = std.testing.expectEqual;
 
-    try expectEqual(.{ 1, 1 }, (try solve(alloc, "1-3 a: abcde")));
-    try expectEqual(.{ 0, 0 }, (try solve(alloc, "1-3 b: cdefg")));
-    try expectEqual(.{ 1, 0 }, (try solve(alloc, "2-9 c: ccccccccc")));
+    try expectEqual(.{ 1, 1 }, (try solve(alloc, "1-3 a: abcde")).ints);
+    try expectEqual(.{ 0, 0 }, (try solve(alloc, "1-3 b: cdefg")).ints);
+    try expectEqual(.{ 1, 0 }, (try solve(alloc, "2-9 c: ccccccccc")).ints);
 }

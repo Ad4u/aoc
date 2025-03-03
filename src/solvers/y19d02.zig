@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn processOpCode(intcode: *std.ArrayList(usize), cursor: *usize) !void {
     const instruction = intcode.items[cursor.*];
@@ -30,7 +31,7 @@ fn runIntCode(intcode: *std.ArrayList(usize), noun: usize, verb: usize) !usize {
     return intcode.items[0];
 }
 
-pub fn solve(a: std.mem.Allocator, input: []const u8) ![2]usize {
+pub fn solve(a: std.mem.Allocator, input: []const u8) !Result {
     var arena = std.heap.ArenaAllocator.init(a);
     defer arena.deinit();
     const alloc = arena.allocator();
@@ -56,7 +57,7 @@ pub fn solve(a: std.mem.Allocator, input: []const u8) ![2]usize {
         }
     }
 
-    return .{ part_1, part_2 };
+    return Result.from(usize, .{ part_1, part_2 });
 }
 
 test "y19d02" {

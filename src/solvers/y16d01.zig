@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const Direction = enum(u8) {
     North,
@@ -33,7 +34,7 @@ const Position = struct {
     }
 };
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var visited = std.AutoHashMap(Position, void).init(alloc);
     defer visited.deinit();
 
@@ -57,16 +58,16 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
             }
         }
     }
-    return .{ position.blockDistance(), (visited_twice orelse Position{}).blockDistance() };
+    return Result.from(u64, .{ position.blockDistance(), (visited_twice orelse Position{}).blockDistance() });
 }
 
 test "y16d01" {
     const alloc = std.testing.allocator;
     const expectEqual = std.testing.expectEqual;
 
-    try expectEqual(5, (try solve(alloc, "R2, L3"))[0]);
-    try expectEqual(2, (try solve(alloc, "R2, R2, R2"))[0]);
-    try expectEqual(12, (try solve(alloc, "R5, L5, R5, R3"))[0]);
+    try expectEqual(5, (try solve(alloc, "R2, L3")).ints[0]);
+    try expectEqual(2, (try solve(alloc, "R2, R2, R2")).ints[0]);
+    try expectEqual(12, (try solve(alloc, "R5, L5, R5, R3")).ints[0]);
 
-    try expectEqual(4, (try solve(alloc, "R8, R4, R4, R8"))[1]);
+    try expectEqual(4, (try solve(alloc, "R8, R4, R4, R8")).ints[1]);
 }

@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn calcFuel(mass: i64) i64 {
     return @divTrunc(mass, 3) - 2;
@@ -17,7 +18,7 @@ fn calcFuelAdded(mass: i64) i64 {
     return total_mass;
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var total_fuel_wo: i64 = 0;
     var total_fuel_wi: i64 = 0;
 
@@ -29,15 +30,15 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]i64 {
         total_fuel_wi += calcFuelAdded(module_mass);
     }
 
-    return .{ total_fuel_wo, total_fuel_wi };
+    return Result.from(i64, .{ total_fuel_wo, total_fuel_wi });
 }
 
 test "y19d01" {
     const alloc = std.testing.allocator;
     const expectEqual = std.testing.expectEqual;
 
-    try expectEqual(2, (try solve(alloc, "12"))[0]);
-    try expectEqual(.{ 2, 2 }, (try solve(alloc, "14")));
-    try expectEqual(.{ 654, 966 }, (try solve(alloc, "1969")));
-    try expectEqual(.{ 33583, 50346 }, (try solve(alloc, "100756")));
+    try expectEqual(2, (try solve(alloc, "12")).ints[0]);
+    try expectEqual(.{ 2, 2 }, (try solve(alloc, "14")).ints);
+    try expectEqual(.{ 654, 966 }, (try solve(alloc, "1969")).ints);
+    try expectEqual(.{ 33583, 50346 }, (try solve(alloc, "100756")).ints);
 }

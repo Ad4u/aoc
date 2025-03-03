@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const LevelState = enum {
     increasing,
@@ -43,7 +44,7 @@ fn isSafeDampened(levels: std.ArrayList(i64)) !bool {
     return false;
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var safe: u64 = 0;
     var safe_dampened: u64 = 0;
 
@@ -63,7 +64,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
         if (try isSafeDampened(levels)) safe_dampened += 1;
     }
 
-    return .{ safe, safe_dampened };
+    return Result.from(u64, .{ safe, safe_dampened });
 }
 
 test "y24d02" {
@@ -79,5 +80,5 @@ test "y24d02" {
         \\1 3 6 7 9
     ;
 
-    try expectEqual(.{ 2, 4 }, (try solve(alloc, input)));
+    try expectEqual(.{ 2, 4 }, (try solve(alloc, input)).ints);
 }

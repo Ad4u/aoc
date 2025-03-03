@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn searchDouble(entries: std.ArrayList(u64)) !u64 {
     for (0..entries.items.len) |i| {
@@ -24,7 +25,7 @@ fn searchTriple(entries: std.ArrayList(u64)) !u64 {
     return error.LogicError;
 }
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var entries = std.ArrayList(u64).init(alloc);
     defer entries.deinit();
 
@@ -36,7 +37,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
     const expense_double = try searchDouble(entries);
     const expense_triple = try searchTriple(entries);
 
-    return .{ expense_double, expense_triple };
+    return Result.from(u64, .{ expense_double, expense_triple });
 }
 
 test "y20d01" {
@@ -52,5 +53,5 @@ test "y20d01" {
         \\1456
     ;
 
-    try expectEqual(.{ 514579, 241861950 }, (try solve(alloc, input)));
+    try expectEqual(.{ 514579, 241861950 }, (try solve(alloc, input)).ints);
 }

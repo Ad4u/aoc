@@ -1,6 +1,7 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]i64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var santa_alone = std.AutoHashMap([2]i64, void).init(alloc);
     defer santa_alone.deinit();
 
@@ -46,18 +47,18 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]i64 {
         try santa_robo.put(position.*, {});
     }
 
-    return .{ santa_alone.count(), santa_robo.count() };
+    return Result.from(i64, .{ santa_alone.count(), santa_robo.count() });
 }
 
 test "y15d03" {
     const alloc = std.testing.allocator;
     const expectEqual = std.testing.expectEqual;
 
-    try expectEqual(2, (try solve(alloc, ">"))[0]);
-    try expectEqual(4, (try solve(alloc, "^>v<"))[0]);
-    try expectEqual(2, (try solve(alloc, "^v^v^v^v^v"))[0]);
+    try expectEqual(2, (try solve(alloc, ">")).ints[0]);
+    try expectEqual(4, (try solve(alloc, "^>v<")).ints[0]);
+    try expectEqual(2, (try solve(alloc, "^v^v^v^v^v")).ints[0]);
 
-    try expectEqual(3, (try solve(alloc, "^v"))[1]);
-    try expectEqual(3, (try solve(alloc, "^>v<"))[1]);
-    try expectEqual(11, (try solve(alloc, "^v^v^v^v^v"))[1]);
+    try expectEqual(3, (try solve(alloc, "^v")).ints[1]);
+    try expectEqual(3, (try solve(alloc, "^>v<")).ints[1]);
+    try expectEqual(11, (try solve(alloc, "^v^v^v^v^v")).ints[1]);
 }

@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const RED_MAX: u64 = 12;
 const GREEN_MAX: u64 = 13;
@@ -43,7 +44,7 @@ fn parseLine(line: []const u8) ![5]u64 { // Id, Red, Green, Blue, Possible (Part
     return .{ id, red, green, blue, possible };
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var sum: u64 = 0;
     var power: u64 = 0;
 
@@ -54,7 +55,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         power += game[1] * game[2] * game[3];
     }
 
-    return .{ sum, power };
+    return Result.from(u64, .{ sum, power });
 }
 
 test "y23d02" {
@@ -69,5 +70,5 @@ test "y23d02" {
         \\Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     ;
 
-    try expectEqual(.{ 8, 2286 }, (try solve(alloc, input)));
+    try expectEqual(.{ 8, 2286 }, (try solve(alloc, input)).ints);
 }

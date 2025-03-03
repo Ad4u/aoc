@@ -1,6 +1,7 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var list_left = std.ArrayList(i64).init(alloc);
     var list_right = std.ArrayList(i64).init(alloc);
     defer list_left.deinit();
@@ -30,7 +31,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
         similary += num * left;
     }
 
-    return .{ distance, @intCast(similary) };
+    return Result.from(u64, .{ distance, @intCast(similary) });
 }
 
 test "y24d01" {
@@ -46,5 +47,5 @@ test "y24d01" {
         \\3   3
     ;
 
-    try expectEqual(.{ 11, 31 }, (try solve(alloc, input)));
+    try expectEqual(.{ 11, 31 }, (try solve(alloc, input)).ints);
 }

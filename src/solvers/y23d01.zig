@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 const words = [_]struct { []const u8, u64 }{ .{ "one", 1 }, .{ "two", 2 }, .{ "three", 3 }, .{ "four", 4 }, .{ "five", 5 }, .{ "six", 6 }, .{ "seven", 7 }, .{ "eight", 8 }, .{ "nine", 9 } };
 
@@ -43,7 +44,7 @@ fn getCalibrationLetters(line: []const u8) !u64 {
     return (first_digit orelse return error.BadInput) * 10 + (last_digit orelse return error.BadInput);
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var total_calibration_digits: u64 = 0;
     var total_calibration_letters: u64 = 0;
 
@@ -53,7 +54,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         total_calibration_letters += try getCalibrationLetters(line);
     }
 
-    return .{ total_calibration_digits, total_calibration_letters };
+    return Result.from(u64, .{ total_calibration_digits, total_calibration_letters });
 }
 
 test "y23d01" {
@@ -77,6 +78,6 @@ test "y23d01" {
         \\7pqrstsixteen
     ;
 
-    try expectEqual(142, (try solve(alloc, input_digit))[0]);
-    try expectEqual(281, (try solve(alloc, input_letters))[1]);
+    try expectEqual(142, (try solve(alloc, input_digit)).ints[0]);
+    try expectEqual(281, (try solve(alloc, input_letters)).ints[1]);
 }

@@ -1,6 +1,7 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
-pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
     var elfes = std.ArrayList(u64).init(alloc);
     defer elfes.deinit();
 
@@ -16,7 +17,7 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) ![2]u64 {
 
     std.mem.sort(u64, elfes.items, {}, comptime std.sort.desc(u64));
 
-    return .{ elfes.items[0], elfes.items[0] + elfes.items[1] + elfes.items[2] };
+    return Result.from(u64, .{ elfes.items[0], elfes.items[0] + elfes.items[1] + elfes.items[2] });
 }
 
 test "y22d01" {
@@ -40,5 +41,5 @@ test "y22d01" {
         \\10000
     ;
 
-    try expectEqual(.{ 24000, 45000 }, (try solve(alloc, input)));
+    try expectEqual(.{ 24000, 45000 }, (try solve(alloc, input)).ints);
 }

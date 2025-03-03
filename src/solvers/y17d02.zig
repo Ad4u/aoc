@@ -1,4 +1,5 @@
 const std = @import("std");
+const Result = @import("../solvers.zig").Result;
 
 fn calcChecksum(line: []const u8) !u64 {
     var max: u64 = 0;
@@ -30,7 +31,7 @@ fn calcRem(line: []const u8) !u64 {
     return 0; // We could return LogicError but then tests are not running
 }
 
-pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
+pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
     var total_checksum: u64 = 0;
     var total_rem: u64 = 0;
 
@@ -40,7 +41,7 @@ pub fn solve(_: std.mem.Allocator, input: []const u8) ![2]u64 {
         total_rem += try calcRem(line);
     }
 
-    return .{ total_checksum, total_rem };
+    return Result.from(u64, .{ total_checksum, total_rem });
 }
 
 test "y17d02" {
@@ -59,6 +60,6 @@ test "y17d02" {
         \\3 8 6 5
     ;
 
-    try expectEqual(18, (try solve(alloc, input_1))[0]);
-    try expectEqual(9, (try solve(alloc, input_2))[1]);
+    try expectEqual(18, (try solve(alloc, input_1)).ints[0]);
+    try expectEqual(9, (try solve(alloc, input_2)).ints[1]);
 }
