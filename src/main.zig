@@ -7,12 +7,12 @@ const RESET_CODE = "\x1b[0m";
 
 pub fn main() !void {
     // -- GP Allocator
-    // var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    // const alloc = gpa.allocator();
-    // defer std.debug.assert(gpa.deinit() == .ok);
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const alloc = gpa.allocator();
+    defer std.debug.assert(gpa.deinit() == .ok);
 
     // -- Page Allocator
-    const alloc = std.heap.page_allocator;
+    // const alloc = std.heap.page_allocator;
 
     const outw = std.io.getStdOut().writer();
 
@@ -30,22 +30,22 @@ pub fn main() !void {
         }
 
         const file_name = try std.fmt.allocPrint(alloc, "inputs/{s}.txt", .{solver.name});
+        defer alloc.free(file_name);
 
         const file = std.fs.cwd().openFile(file_name, .{}) catch {
             try outw.print(RED_CODE ++ "{s} : Unable to open input file\n" ++ RESET_CODE, .{solver.name});
             continue;
         };
-        alloc.free(file_name);
+        defer file.close();
 
         const input_raw = try file.readToEndAlloc(alloc, try std.math.powi(usize, 2, 16));
-        file.close();
         const input = std.mem.trim(u8, input_raw, "\n");
+        defer alloc.free(input_raw);
 
         const results = solver.func(alloc, input) catch |err| {
             try outw.print(RED_CODE ++ "{s} : Solver returned an error - {s}\n" ++ RESET_CODE, .{ solver.name, @errorName(err) });
             continue;
         };
-        alloc.free(input_raw);
 
         switch (results) {
             .ints => |vals| try outw.print(GREEN_CODE ++ "{s} : {} - {}\n" ++ RESET_CODE, .{ solver.name, vals[0], vals[1] }),
