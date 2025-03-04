@@ -25,26 +25,36 @@ pub const Solver = struct {
 pub const y15d01 = @import("solvers/y15d01.zig");
 pub const y15d02 = @import("solvers/y15d02.zig");
 pub const y15d03 = @import("solvers/y15d03.zig");
+
 pub const y16d01 = @import("solvers/y16d01.zig");
 pub const y16d02 = @import("solvers/y16d02.zig");
 pub const y16d03 = @import("solvers/y16d03.zig");
+
 pub const y17d01 = @import("solvers/y17d01.zig");
 pub const y17d02 = @import("solvers/y17d02.zig");
 pub const y17d03 = @import("solvers/y17d03.zig");
+
 pub const y18d01 = @import("solvers/y18d01.zig");
 pub const y18d02 = @import("solvers/y18d02.zig");
 pub const y18d03 = @import("solvers/y18d03.zig");
+
 pub const y19d01 = @import("solvers/y19d01.zig");
 pub const y19d02 = @import("solvers/y19d02.zig");
 pub const y19d03 = @import("solvers/y19d03.zig");
+
 pub const y20d01 = @import("solvers/y20d01.zig");
 pub const y20d02 = @import("solvers/y20d02.zig");
+pub const y20d03 = @import("solvers/y20d03.zig");
+
 pub const y21d01 = @import("solvers/y21d01.zig");
 pub const y21d02 = @import("solvers/y21d02.zig");
+
 pub const y22d01 = @import("solvers/y22d01.zig");
 pub const y22d02 = @import("solvers/y22d02.zig");
+
 pub const y23d01 = @import("solvers/y23d01.zig");
 pub const y23d02 = @import("solvers/y23d02.zig");
+
 pub const y24d01 = @import("solvers/y24d01.zig");
 pub const y24d02 = @import("solvers/y24d02.zig");
 
@@ -52,26 +62,36 @@ pub const List = [_]Solver{
     Solver{ .name = "y15d01", .func = y15d01.solve },
     Solver{ .name = "y15d02", .func = y15d02.solve },
     Solver{ .name = "y15d03", .func = y15d03.solve },
+
     Solver{ .name = "y16d01", .func = y16d01.solve },
     Solver{ .name = "y16d02", .func = y16d02.solve },
     Solver{ .name = "y16d03", .func = y16d03.solve },
+
     Solver{ .name = "y17d01", .func = y17d01.solve },
     Solver{ .name = "y17d02", .func = y17d02.solve },
     Solver{ .name = "y17d03", .func = y17d03.solve },
+
     Solver{ .name = "y18d01", .func = y18d01.solve },
     Solver{ .name = "y18d02", .func = y18d02.solve },
     Solver{ .name = "y18d03", .func = y18d03.solve },
+
     Solver{ .name = "y19d01", .func = y19d01.solve },
     Solver{ .name = "y19d02", .func = y19d02.solve },
     Solver{ .name = "y19d03", .func = y19d03.solve },
+
     Solver{ .name = "y20d01", .func = y20d01.solve },
     Solver{ .name = "y20d02", .func = y20d02.solve },
+    Solver{ .name = "y20d03", .func = y20d03.solve },
+
     Solver{ .name = "y21d01", .func = y21d01.solve },
     Solver{ .name = "y21d02", .func = y21d02.solve },
+
     Solver{ .name = "y22d01", .func = y22d01.solve },
     Solver{ .name = "y22d02", .func = y22d02.solve },
+
     Solver{ .name = "y23d01", .func = y23d01.solve },
     Solver{ .name = "y23d02", .func = y23d02.solve },
+
     Solver{ .name = "y24d01", .func = y24d01.solve },
     Solver{ .name = "y24d02", .func = y24d02.solve },
 };
