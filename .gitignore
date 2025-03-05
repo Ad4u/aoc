@@ -2,5 +2,8 @@
 
 .zig-cache/
 zig-out/
-inputs/
+
+inputs/*
+!inputs/README.md
+
 benchmark/
