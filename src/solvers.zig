@@ -15,6 +15,10 @@ pub const Result = union(enum) {
             else => unreachable,
         }
     }
+
+    pub fn clear(self: *Result) void {
+        if (self.* == Result.strs) for (self.strs) |list| list.deinit();
+    }
 };
 
 pub const Solver = struct {

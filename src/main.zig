@@ -46,7 +46,7 @@ pub fn main() !void {
         defer alloc.free(input_raw);
 
         timer.reset();
-        const results = solver.func(alloc, input) catch |err| {
+        var results = solver.func(alloc, input) catch |err| {
             try outw.print(RED_CODE ++ "{s} : Solver returned an error - {s}\n" ++ RESET_CODE, .{ solver.name, @errorName(err) });
             continue;
         };
@@ -57,11 +57,9 @@ pub fn main() !void {
             .ints => |vals| try outw.print(GREEN_CODE ++ "{s} : {} - {} ({} µs)\n" ++ RESET_CODE, .{ solver.name, vals[0], vals[1], elapsed / 1000 }),
             .strs => |vals| {
                 try outw.print(GREEN_CODE ++ "{s} : {s} - {s} ({} µs)\n" ++ RESET_CODE, .{ solver.name, vals[0].items, vals[1].items, elapsed / 1000 });
-                for (vals) |list| {
-                    list.deinit();
-                }
             },
         }
+        results.clear();
     }
     try outw.print("Total time: {} µs\n", .{total_time / 1000});
 }
