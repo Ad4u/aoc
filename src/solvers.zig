@@ -1,4 +1,5 @@
 const std = @import("std");
+const CODES = @import("main.zig").CODES;
 
 pub const Result = union(enum) {
     ints: [2]i64,
@@ -16,8 +17,17 @@ pub const Result = union(enum) {
         }
     }
 
-    pub fn clear(self: *Result) void {
-        if (self.* == Result.strs) for (self.strs) |list| list.deinit();
+    pub fn clear(self: Result) void {
+        if (self == Result.strs) for (self.strs) |list| list.deinit();
+    }
+
+    pub fn show(self: Result, name: []const u8, elapsed: u64, outw: std.fs.File.Writer) !void {
+        switch (self) {
+            .ints => |vals| try outw.print(CODES.GREEN ++ "{s} : {} - {} ({} µs)\n" ++ CODES.RESET, .{ name, vals[0], vals[1], elapsed / 1000 }),
+            .strs => |vals| {
+                try outw.print(CODES.GREEN ++ "{s} : {s} - {s} ({} µs)\n" ++ CODES.RESET, .{ name, vals[0].items, vals[1].items, elapsed / 1000 });
+            },
+        }
     }
 };
 

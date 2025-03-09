@@ -6,4 +6,5 @@ zig-out/
 inputs/*
 !inputs/README.md
 
-benchmark/
+benchmark/*
+!benchmark/README.md
