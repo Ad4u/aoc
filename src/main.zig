@@ -35,14 +35,15 @@ pub fn main() !void {
 
     const nruns: usize = if (bench_mode) BENCH_RUNS else 1;
 
-    var timings = std.StringHashMap(std.ArrayList(u64)).init(alloc);
-    defer {
-        var iter = timings.valueIterator();
-        while (iter.next()) |list| list.deinit();
-        timings.deinit();
-    }
+    const timing_file = std.fs.cwd().createFile("benchmark/timings.csv", .{}) catch {
+        try outw.print(CODES.RED ++ "Unable to open input timings file\n" ++ CODES.RESET, .{});
+        std.process.exit(1);
+    };
+    defer timing_file.close();
+    try timing_file.writeAll("year,day,elapsed\n");
 
     var timer = try std.time.Timer.start();
+    var buf: [64]u8 = undefined; // Buffer to write new line to timing_file
 
     for (solvers.List) |solver| {
         if (requested_solver != null and !std.mem.eql(u8, requested_solver.?, solver.name)) {
@@ -70,14 +71,8 @@ pub fn main() !void {
             };
             const elapsed = timer.read();
 
-            var entry = timings.getOrPutValue(solver.name, std.ArrayList(u64).init(alloc)) catch |err| {
-                try outw.print(CODES.RED ++ "Error when adding timing array for {s}: {s}" ++ CODES.RESET, .{ solver.name, @errorName(err) });
-                continue;
-            };
-            entry.value_ptr.append(elapsed) catch |err| {
-                try outw.print(CODES.RED ++ "Error when adding timing entry for {s}: {s} " ++ CODES.RESET, .{ solver.name, @errorName(err) });
-                continue;
-            };
+            const line = try std.fmt.bufPrint(&buf, "{s},{s},{}\n", .{ solver.name[1..3], solver.name[4..], elapsed });
+            try timing_file.writeAll(line);
 
             if (!bench_mode) try results.show(solver.name, elapsed, outw);
             results.clear();
@@ -87,43 +82,6 @@ pub fn main() !void {
     }
 
     if (bench_mode) try outw.print("\n", .{});
-
-    exportTimings(timings, nruns, "benchmark/timings.csv") catch |err| {
-        try outw.print(CODES.RED ++ "Error when exporting timings: {s}" ++ CODES.RESET, .{@errorName(err)});
-    };
-}
-
-// Very inefficient way to export to CSV. TODO: improve it.
-fn exportTimings(timings: std.StringHashMap(std.ArrayList(u64)), nruns: usize, filepath: []const u8) !void {
-    const timings_file = try std.fs.cwd().createFile(filepath, .{});
-    defer timings_file.close();
-
-    // Header
-    var first_header = true;
-    for (solvers.List) |solver| {
-        if (!timings.contains(solver.name)) continue;
-
-        if (!first_header) try timings_file.writeAll(",");
-        try timings_file.writeAll(solver.name);
-        first_header = false;
-    }
-    try timings_file.writeAll("\n");
-
-    // Timings
-    var buf: [64]u8 = undefined;
-    for (0..nruns) |i| {
-        var first_timing = true;
-        for (solvers.List) |solver| {
-            if (!timings.contains(solver.name)) continue;
-
-            if (!first_timing) try timings_file.writeAll(",");
-            const time = timings.get(solver.name).?.items[i];
-            const time_str = try std.fmt.bufPrint(&buf, "{}", .{time / 1000});
-            try timings_file.writeAll(time_str);
-            first_timing = false;
-        }
-        try timings_file.writeAll("\n");
-    }
 }
 
 test {
