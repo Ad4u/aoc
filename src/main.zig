@@ -8,7 +8,6 @@ pub const CODES = struct {
 };
 
 const BENCH_RUNS = 100;
-const WARMUPS = 25;
 
 pub fn main() !void {
     // -- GP Allocator
@@ -34,7 +33,7 @@ pub fn main() !void {
         if (std.mem.eql(u8, arg, "bench")) bench_mode = true;
     }
 
-    const nruns: usize = if (bench_mode) BENCH_RUNS + WARMUPS else 1;
+    const nruns: usize = if (bench_mode) BENCH_RUNS else 1;
 
     var timings = std.StringHashMap(std.ArrayList(u64)).init(alloc);
     defer {
@@ -89,20 +88,39 @@ pub fn main() !void {
 
     if (bench_mode) try outw.print("\n", .{});
 
-    // Write timings into a file in csv format
-    const timings_file = std.fs.cwd().createFile("benchmark/timings.csv", .{}) catch |err| {
-        try outw.print(CODES.RED ++ "Error when opening timings file: {s}\n" ++ CODES.RESET, .{@errorName(err)});
-        std.process.exit(1);
+    exportTimings(timings, nruns, "benchmark/timings.csv") catch |err| {
+        try outw.print(CODES.RED ++ "Error when exporting timings: {s}" ++ CODES.RESET, .{@errorName(err)});
     };
+}
+
+// Very inefficient way to export to CSV. TODO: improve it.
+fn exportTimings(timings: std.StringHashMap(std.ArrayList(u64)), nruns: usize, filepath: []const u8) !void {
+    const timings_file = try std.fs.cwd().createFile(filepath, .{});
     defer timings_file.close();
 
-    var timings_iter = timings.iterator();
-    while (timings_iter.next()) |entry| {
-        try timings_file.writeAll(entry.key_ptr.*);
-        for (entry.value_ptr.items) |t| {
-            const t_str = try std.fmt.allocPrint(alloc, ",{}", .{t});
-            try timings_file.writeAll(t_str);
-            alloc.free(t_str);
+    // Header
+    var first_header = true;
+    for (solvers.List) |solver| {
+        if (!timings.contains(solver.name)) continue;
+
+        if (!first_header) try timings_file.writeAll(",");
+        try timings_file.writeAll(solver.name);
+        first_header = false;
+    }
+    try timings_file.writeAll("\n");
+
+    // Timings
+    var buf: [64]u8 = undefined;
+    for (0..nruns) |i| {
+        var first_timing = true;
+        for (solvers.List) |solver| {
+            if (!timings.contains(solver.name)) continue;
+
+            if (!first_timing) try timings_file.writeAll(",");
+            const time = timings.get(solver.name).?.items[i];
+            const time_str = try std.fmt.bufPrint(&buf, "{}", .{time / 1000});
+            try timings_file.writeAll(time_str);
+            first_timing = false;
         }
         try timings_file.writeAll("\n");
     }
