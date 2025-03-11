@@ -24,10 +24,14 @@ To generate markdown documents and svg, you need `Python` with `uv` installed, a
 - y19d03: Use line segments instead of HashMaps of all visited locations
 
 # Benchmarks
+## All years
+![All years benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/total.svg)
+
 ## 2015
-![2015 Benchmark Graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2015.svg)
-![2015 benchmark Timings](https://github.com/Ad4u/aoc/blob/master/benchmark/2015.md)
+![2015 benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2015.svg)
 
 ## 2016
-![2016 Benchmark Graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2016.svg)
-![2016 benchmark Timings](https://github.com/Ad4u/aoc/blob/master/benchmark/2016.md)
+![2016 benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2016.svg)
+
+## 2017
+![2017 benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2017.svg)
