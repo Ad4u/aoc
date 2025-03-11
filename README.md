@@ -19,13 +19,16 @@ To generate markdown documents and svg, you need `Python` with `uv` installed, a
   - [yazap](https://github.com/prajwalch/yazap)
   - [zig-args](https://github.com/ikskuh/zig-args)
 - Include the graph/md generation into the binary, getting rid of the Python/uv dependencies.
+- Include exported markdowns in readme file.
 
 # Solvers with room for improvements
 - y19d03: Use line segments instead of HashMaps of all visited locations
 
 # Benchmarks
-## All years
+<details>
+<summary>All years</summary> 
 ![All years benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/total.svg)
+</details>
 
 ## 2015
 ![2015 benchmark graph](https://github.com/Ad4u/aoc/blob/master/benchmark/2015.svg)
