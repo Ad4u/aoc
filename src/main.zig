@@ -7,8 +7,6 @@ pub const CODES = struct {
     pub const RESET = "\x1b[0m";
 };
 
-const BENCH_RUNS = 100;
-
 pub fn main() !void {
     // -- GP Allocator
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -25,17 +23,9 @@ pub fn main() !void {
 
     // Use Zig-Clap for parsing ?
     var requested_solver: ?[]const u8 = null; // Run only one solver
-    var bench_mode: bool = false; // Silence result output (for benchmark)
-    for (args) |arg| {
-        for (solvers.List) |solver| {
-            if (std.mem.eql(u8, arg, solver.name)) requested_solver = arg;
-        }
-        if (std.mem.eql(u8, arg, "bench")) bench_mode = true;
-    }
+    if (args.len >= 2) requested_solver = args[1];
 
-    const nruns: usize = if (bench_mode) BENCH_RUNS else 1;
-
-    const timing_file = std.fs.cwd().createFile("benchmark/timings.csv", .{}) catch {
+    const timing_file = std.fs.cwd().createFile("timings.csv", .{}) catch {
         try outw.print(CODES.RED ++ "Unable to open input timings file\n" ++ CODES.RESET, .{});
         std.process.exit(1);
     };
@@ -43,6 +33,7 @@ pub fn main() !void {
     try timing_file.writeAll("year,day,elapsed\n");
 
     var timer = try std.time.Timer.start();
+    var total_time: u64 = 0;
     var buf: [64]u8 = undefined; // Buffer to write new line to timing_file
 
     for (solvers.List) |solver| {
@@ -63,25 +54,22 @@ pub fn main() !void {
         const input = std.mem.trim(u8, input_raw, "\n");
         defer alloc.free(input_raw);
 
-        for (0..nruns) |i| {
-            timer.reset();
-            var results = solver.func(alloc, input) catch |err| {
-                try outw.print(CODES.RED ++ "{s} : Solver returned an error - {s}\n" ++ CODES.RESET, .{ solver.name, @errorName(err) });
-                continue;
-            };
-            const elapsed = timer.read();
+        timer.reset();
+        var results = solver.func(alloc, input) catch |err| {
+            try outw.print(CODES.RED ++ "{s} : Solver returned an error - {s}\n" ++ CODES.RESET, .{ solver.name, @errorName(err) });
+            continue;
+        };
+        const elapsed = timer.read();
+        total_time += elapsed;
 
-            const line = try std.fmt.bufPrint(&buf, "{s},{s},{}\n", .{ solver.name[1..3], solver.name[4..], elapsed });
-            try timing_file.writeAll(line);
+        const line = try std.fmt.bufPrint(&buf, "{s},{s},{}\n", .{ solver.name[1..3], solver.name[4..], elapsed });
+        try timing_file.writeAll(line);
 
-            if (!bench_mode) try results.show(solver.name, elapsed, outw);
-            results.clear();
-
-            if (bench_mode) try outw.print("\r{s} - run {}/{}    \x00", .{ solver.name, i + 1, nruns });
-        }
+        try results.show(solver.name, elapsed, outw);
+        results.clear();
     }
 
-    if (bench_mode) try outw.print("\n", .{});
+    try outw.print("Total time: {} ms\n", .{total_time / 1_000_000});
 }
 
 test {

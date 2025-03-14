@@ -3,5 +3,9 @@
 .zig-cache/
 zig-out/
 
+# Do not track intermediate benchmark files
+timings.csv
+table.md
+
 inputs/*
 !inputs/README.md
