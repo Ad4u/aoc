@@ -30,7 +30,6 @@ if __name__ == "__main__":
     fig.update_traces(texttemplate="%{label:02d}<br>%{value:.2f} ms<br>%{percentParent}")
     fig.update_layout(autosize=False, width=1440, height=1440, margin=dict(l=0, r=0, b=10, t=80, pad=0))
 
-    fig.write_image("graph.png")
     fig.write_image("graph.svg")
 
     df["elapsed"] = df["elapsed"] * 1000
