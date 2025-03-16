@@ -1,11 +1,6 @@
 const std = @import("std");
 pub const solvers = @import("solvers.zig");
-
-pub const CODES = struct {
-    pub const GREEN = "\x1b[32m";
-    pub const RED = "\x1b[31m";
-    pub const RESET = "\x1b[0m";
-};
+const CODES = @import("utils.zig").CODES;
 
 pub fn main() !void {
     // -- GP Allocator

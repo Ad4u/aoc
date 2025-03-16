@@ -1,5 +1,5 @@
 const std = @import("std");
-const CODES = @import("main.zig").CODES;
+const CODES = @import("utils.zig").CODES;
 
 pub const Result = union(enum) {
     ints: [2]i64,
