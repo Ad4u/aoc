@@ -23,12 +23,14 @@ To generate the graph and the markdown table from the `timings.csv` file, you ne
 - y19d03: Use line segments instead of HashMaps of all visited locations
 
 # Benchmark
+Benchmarks have been run on a MacBook Air M3 16 Go.
+
 ## Graph
 ![Benchmark graph](https://github.com/Ad4u/aoc/blob/master/graph.svg)
 
 ## Timings in µs
 |Day\Year|   2015 |   2016 |   2017 |   2018 |   2019 |   2020 |   2021 |   2022 |   2023 |   2024 |
-|-------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
-|     1 |     17 |     66 |      2 |   1110 |      3 |     79 |     69 |     52 |    290 |    165 |
-|     2 |     29 |     20 |     30 |   1351 |   1731 |     54 |      9 |     12 |     31 |    120 |
-|     3 |    403 |     63 |    223 |    499 |  10029 |     21 |    166 |    126 |    107 |     53 |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+|      1 |     17 |     66 |      2 |   1110 |      3 |     79 |     69 |     52 |    290 |    165 |
+|      2 |     29 |     20 |     30 |   1351 |   1731 |     54 |      9 |     12 |     31 |    120 |
+|      3 |    403 |     63 |    223 |    499 |  10029 |     21 |    166 |    126 |    107 |     53 |
