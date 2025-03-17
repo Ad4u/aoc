@@ -4,12 +4,15 @@ const CODES = @import("utils.zig").CODES;
 
 pub fn main() !void {
     // -- GP Allocator
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const alloc = gpa.allocator();
-    defer std.debug.assert(gpa.deinit() == .ok);
+    // var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    // const alloc = gpa.allocator();
+    // defer std.debug.assert(gpa.deinit() == .ok);
 
     // -- Page Allocator
     // const alloc = std.heap.page_allocator;
+
+    // -- SMP Allocator
+    const alloc = std.heap.smp_allocator;
 
     const outw = std.io.getStdOut().writer();
 
