@@ -1,18 +1,20 @@
 const std = @import("std");
+const builtin = @import("builtin");
 pub const solvers = @import("solvers.zig");
 const CODES = @import("utils.zig").CODES;
 
 pub fn main() !void {
-    // -- GP Allocator
-    // var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    // const alloc = gpa.allocator();
-    // defer std.debug.assert(gpa.deinit() == .ok);
 
-    // -- Page Allocator
-    // const alloc = std.heap.page_allocator;
+    // Choose allocator: SMP for Fast/Small, Debug for Debug/Safe
+    var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
+    const alloc = switch (builtin.mode) {
+        .Debug, .ReleaseSafe => debug_allocator.allocator(),
+        .ReleaseFast, .ReleaseSmall => std.heap.smp_allocator,
+    };
 
-    // -- SMP Allocator
-    const alloc = std.heap.smp_allocator;
+    defer if (builtin.mode == .Debug or builtin.mode == .ReleaseSafe) {
+        _ = debug_allocator.deinit();
+    };
 
     const outw = std.io.getStdOut().writer();
 
