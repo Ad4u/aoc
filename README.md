@@ -12,10 +12,6 @@ In all cases, the binary will output a csv file named `timings.csv` in the root 
 To generate the graph and the markdown table from the `timings.csv` file, you need `Python` and `uv` installed, then and execute the `benchmark.py` script.
 
 # Todos
-- Use an argument parser to better handle requested solvers, benchmarks, outputs/inputs locations, etc:
-  - [zig-clap](https://github.com/Hejsil/zig-clap)
-  - [yazap](https://github.com/prajwalch/yazap)
-  - [zig-args](https://github.com/ikskuh/zig-args)
 - (?) Include the graph/md generation into the binary, getting rid of the Python/uv dependencies.
 - (?) Auto-Download input files.
 

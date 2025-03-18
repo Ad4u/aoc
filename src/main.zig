@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+
 pub const solvers = @import("solvers.zig");
 const CODES = @import("utils.zig").CODES;
 
@@ -21,7 +22,6 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(alloc);
     defer std.process.argsFree(alloc, args);
 
-    // Use Zig-Clap for parsing ?
     var requested_solver: ?[]const u8 = null; // Run only one solver
     if (args.len >= 2) requested_solver = args[1];
 
