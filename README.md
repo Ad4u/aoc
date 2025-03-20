@@ -1,5 +1,9 @@
 Solutions for [Advent of Code](https://adventofcode.com) in Zig.
 
+This is an amateur hobby project. I don't claim to be the fastest nor the most readable, but I try to.
+
+PR to improve already existing solvers are welcomed. I'd like to learn and play, so I might not accept PR for new solvers.
+
 # Usage
 Use Zig build script to generate the binary: `zig build -Doptimize=ReleaseFast`.
 
