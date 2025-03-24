@@ -21,6 +21,7 @@ To generate the graph and the markdown table from the `timings.csv` file, you ne
 
 # Solvers with room for improvements
 - y19d03: Use line segments instead of HashMaps of all visited locations
+- y17d04: Compare strings in place instead of storing them in StringHashMap
 
 # Benchmark
 Benchmarks have been run on a MacBook Air M3 16 Go.
@@ -34,4 +35,4 @@ Benchmarks have been run on a MacBook Air M3 16 Go.
 |      1 |     17 |     66 |      2 |   1110 |      3 |     79 |     69 |     52 |    290 |    165 |
 |      2 |     29 |     20 |     30 |   1351 |   1731 |     54 |      9 |     12 |     31 |    120 |
 |      3 |    403 |     63 |    223 |    499 |  10029 |     21 |    166 |    126 |    107 |     53 |
-|      4 |        |        |        |        |   1119 |     55 |    172 |     35 |     85 |   6043 |
+|      4 |        |    458 |    336 |        |   1119 |     55 |    172 |     35 |     85 |   6043 |

@@ -43,14 +43,17 @@ pub const y15d03 = @import("solvers/y15d03.zig");
 pub const y16d01 = @import("solvers/y16d01.zig");
 pub const y16d02 = @import("solvers/y16d02.zig");
 pub const y16d03 = @import("solvers/y16d03.zig");
+pub const y16d04 = @import("solvers/y16d04.zig");
 
 pub const y17d01 = @import("solvers/y17d01.zig");
 pub const y17d02 = @import("solvers/y17d02.zig");
 pub const y17d03 = @import("solvers/y17d03.zig");
+pub const y17d04 = @import("solvers/y17d04.zig");
 
 pub const y18d01 = @import("solvers/y18d01.zig");
 pub const y18d02 = @import("solvers/y18d02.zig");
 pub const y18d03 = @import("solvers/y18d03.zig");
+pub const y18d04 = @import("solvers/y18d04.zig");
 
 pub const y19d01 = @import("solvers/y19d01.zig");
 pub const y19d02 = @import("solvers/y19d02.zig");
@@ -90,14 +93,17 @@ pub const List = [_]Solver{
     Solver{ .name = "y16d01", .func = y16d01.solve },
     Solver{ .name = "y16d02", .func = y16d02.solve },
     Solver{ .name = "y16d03", .func = y16d03.solve },
+    Solver{ .name = "y16d04", .func = y16d04.solve },
 
     Solver{ .name = "y17d01", .func = y17d01.solve },
     Solver{ .name = "y17d02", .func = y17d02.solve },
     Solver{ .name = "y17d03", .func = y17d03.solve },
+    Solver{ .name = "y17d04", .func = y17d04.solve },
 
     Solver{ .name = "y18d01", .func = y18d01.solve },
     Solver{ .name = "y18d02", .func = y18d02.solve },
     Solver{ .name = "y18d03", .func = y18d03.solve },
+    Solver{ .name = "y18d04", .func = y18d04.solve },
 
     Solver{ .name = "y19d01", .func = y19d01.solve },
     Solver{ .name = "y19d02", .func = y19d02.solve },
