@@ -69,10 +69,11 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
 
     var unique: u64 = 0;
     for (claims.items) |claim| {
-        if (claim.isUnique(fabric)) unique = claim.id;
-        break;
+        if (claim.isUnique(fabric)) {
+            unique = claim.id;
+            break;
+        }
     }
-
     return Result.from(u64, .{ overlap, unique });
 }
 
@@ -86,5 +87,5 @@ test "y18d03" {
         \\#3 @ 5,5: 2x2
     ;
 
-    try expectEqual(4, (try solve(alloc, input)).ints[0]);
+    try expectEqual(.{ 4, 3 }, (try solve(alloc, input)).ints);
 }
