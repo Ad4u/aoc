@@ -36,7 +36,6 @@ fn worker(shared: *Shared) void {
         const slice = std.fmt.bufPrint(&input_buffer, "{s}{}", .{ shared.prefix, offset }) catch return;
 
         for (0..1000) |i| {
-            // std.debug.print("i: {}\n", .{i});
             slice[slice.len - 3] = '0' + @as(u8, @intCast(i / 100));
             slice[slice.len - 2] = '0' + @as(u8, @intCast((i / 10) % 10));
             slice[slice.len - 1] = '0' + @as(u8, @intCast(i % 10));
