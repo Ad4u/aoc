@@ -1,7 +1,4 @@
 const std = @import("std");
-const md5 = std.crypto.hash.Md5;
-const Value = std.atomic.Value;
-const Pool = std.Thread.Pool;
 const Result = @import("../solvers.zig").Result;
 
 const FORBIDDEN_PAIRS: [4][]const u8 = .{ "ab", "cd", "pq", "xy" };

@@ -16,6 +16,7 @@ In all cases, the binary will output a csv file named `timings.csv` in the root 
 To generate the graph and the markdown table from the `timings.csv` file, you need `Python` and `uv` installed, then and execute the `benchmark.py` script.
 
 # Todos
+- Use `mvzr` as main way to parse data
 - (?) Include the graph/md generation into the binary, getting rid of the Python/uv dependencies.
 - (?) Auto-Download input files.
 
@@ -37,3 +38,4 @@ Benchmarks have been run on a MacBook Air M3 16 Go.
 |      3 |    403 |     63 |    223 |    499 |  10029 |     21 |    166 |    126 |    107 |     53 |
 |      4 | 144 ms |    458 |    336 |    185 |   1119 |     55 |    172 |     35 |     85 |   6043 |
 |      5 |     63 |        |        |        |        |        |        |        |        |        |
+|      6 |   9689 |        |        |        |        |        |        |        |        |        |

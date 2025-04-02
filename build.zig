@@ -10,10 +10,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const mvzr = b.dependency("mvzr", .{ .target = target, .optimize = optimize });
+
     const exe = b.addExecutable(.{
         .name = "aoc",
         .root_module = main_module,
     });
+    exe.root_module.addImport("mvzr", mvzr.module("mvzr"));
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);
