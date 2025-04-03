@@ -36,26 +36,23 @@ const Shared = struct {
 
         if (self.found.items.len < 8) return;
 
+        var b: [1]u8 = undefined;
+
         // Password 1
-        if (self.found.items.len == 8) {
-            var b: [1]u8 = undefined;
-            for (self.found.items, 0..) |fd, i| {
-                _ = std.fmt.bufPrint(&b, "{x}", .{fd.char_5}) catch unreachable;
-                self.pass_1[i] = b[0];
-            }
+        for (self.found.items, 0..) |fd, i| {
+            if (i > 7) continue;
+            _ = std.fmt.bufPrint(&b, "{x}", .{fd.char_5}) catch unreachable;
+            self.pass_1[i] = b[0];
         }
 
         // Password 2
-        if (self.found.items.len >= 8) {
-            var b: [1]u8 = undefined;
-            for (self.found.items) |fd| {
-                const pos = fd.char_5;
-                if (pos > 7) continue;
-                if (self.pass_2[pos] != '_') continue;
+        for (self.found.items) |fd| {
+            const pos = fd.char_5;
+            if (pos > 7) continue;
+            if (self.pass_2[pos] != '_') continue;
 
-                _ = std.fmt.bufPrint(&b, "{x}", .{fd.char_6 / 16}) catch unreachable;
-                self.pass_2[pos] = b[0];
-            }
+            _ = std.fmt.bufPrint(&b, "{x}", .{fd.char_6 / 16}) catch unreachable;
+            self.pass_2[pos] = b[0];
         }
     }
 };
