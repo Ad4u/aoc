@@ -55,6 +55,7 @@ pub const y17d02 = @import("solvers/y17d02.zig");
 pub const y17d03 = @import("solvers/y17d03.zig");
 pub const y17d04 = @import("solvers/y17d04.zig");
 pub const y17d05 = @import("solvers/y17d05.zig");
+pub const y17d06 = @import("solvers/y17d06.zig");
 
 pub const y18d01 = @import("solvers/y18d01.zig");
 pub const y18d02 = @import("solvers/y18d02.zig");
@@ -111,6 +112,7 @@ pub const List = [_]Solver{
     Solver{ .name = "y17d03", .func = y17d03.solve },
     Solver{ .name = "y17d04", .func = y17d04.solve },
     Solver{ .name = "y17d05", .func = y17d05.solve },
+    Solver{ .name = "y17d06", .func = y17d06.solve },
 
     Solver{ .name = "y18d01", .func = y18d01.solve },
     Solver{ .name = "y18d02", .func = y18d02.solve },
