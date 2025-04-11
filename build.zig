@@ -30,7 +30,8 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_cmd.step);
 
     const test_step = b.step("test", "Run unit tests");
-    const exe_unit_tests = b.addTest(.{ .root_module = main_module });
+    const test_filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &[0][]const u8{};
+    const exe_unit_tests = b.addTest(.{ .root_module = main_module, .target = target, .optimize = optimize, .filters = test_filters });
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
     test_step.dependOn(&run_exe_unit_tests.step);
 
