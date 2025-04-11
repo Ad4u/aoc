@@ -56,17 +56,24 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
 
     for (ymin..ymax + 1) |y| {
         for (xmin..xmax + 1) |x| {
+            const cxy = Coords{ x, y };
+            var dists = std.ArrayList(usize).init(alloc);
+            defer dists.deinit();
             var min_dist: usize = std.math.maxInt(usize);
             var idx: usize = undefined;
 
             var iter = points.iterator();
             while (iter.next()) |e| {
-                const d = dist(Coords{ x, y }, e.value_ptr.*);
+                const d = dist(cxy, e.value_ptr.*);
+                try dists.append(d);
                 if (min_dist > d) {
                     min_dist = d;
                     idx = e.key_ptr.*;
                 }
             }
+            std.mem.sort(usize, dists.items, {}, std.sort.asc(usize));
+            if (dists.items[0] == dists.items[1]) continue;
+
             const entry = try counts.getOrPutValue(idx, 0);
             entry.value_ptr.* += 1;
 
@@ -85,7 +92,15 @@ pub fn solve(alloc: std.mem.Allocator, input: []const u8) !Result {
         std.debug.print("idx inf: {}\n", .{e.key_ptr.*});
     }
 
-    return Result.from(usize, .{ 0, 0 });
+    var max: usize = 0;
+    var ci = counts.iterator();
+    while (ci.next()) |e| {
+        if (infinite.getKey(e.key_ptr.*) != null) continue;
+        const c = e.value_ptr.*;
+        if (max < c) max = c;
+    }
+
+    return Result.from(usize, .{ max, 0 });
 }
 
 test "y18d06" {
