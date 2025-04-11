@@ -2,7 +2,7 @@ const std = @import("std");
 const Result = @import("../solvers.zig").Result;
 
 pub fn solve(_: std.mem.Allocator, input: []const u8) !Result {
-    var trees: [512][32]bool = undefined; // Y, X
+    var trees: [512][32]bool = @splat(@splat(false)); // Y, X
 
     var lines = std.mem.tokenizeScalar(u8, input, '\n');
 
